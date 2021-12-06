@@ -1,11 +1,8 @@
 sudo: required
-dist: trusty
+dist: hirsute
 
 services:
     - docker
-
-before_script:
-//    - // install required packages for the linting or notification process (optional).
 
 script:
     - |
@@ -15,8 +12,3 @@ script:
           --workdir /usr/src \
           r.j3ss.co/shellcheck ./.test.sh
 
-after_success:
-//   - // e.g. send notification via Telegram.
-
-after_failure:
-//    - // dito.
