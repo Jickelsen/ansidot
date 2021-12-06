@@ -5,7 +5,7 @@ services:
     - docker
 
 before_script:
-    - // install required packages for the linting or notification process (optional).
+//    - // install required packages for the linting or notification process (optional).
 
 script:
     - |
@@ -16,7 +16,7 @@ script:
           r.j3ss.co/shellcheck ./.test.sh
 
 after_success:
-    - // e.g. send notification via Telegram.
+//   - // e.g. send notification via Telegram.
 
 after_failure:
-    - // dito.
+//    - // dito.
