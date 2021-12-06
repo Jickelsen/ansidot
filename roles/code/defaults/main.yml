@@ -1,13 +1,11 @@
-visual_code_link: "https://go.microsoft.com/fwlink/?LinkID=760868"
-
 visual_code_extensions:
   - "ms-azuretools.vscode-docker"
-  - "ms-vscode-remote.remote-containers"
-  - "dart-code.dart-code"
-  - "dart-code.flutter"
-  - "saratravi.elixir-formatter"
-  - "jakebecker.elixir-ls"
-  - "mjmcloug.vscode-elixir"
-  - "bradlc.vscode-tailwindcss"
+  - "sainnhe.gruvbox-material"
+  - "ms-vsliveshare.vsliveshare"
+  - "ericsonwillians.oldschool-theme"
+  - "ms-vscode-remote.remote-ssh"
+  - "octref.vetur"
+  - "vspacecode.vspacecode"
+  - "joedevivo.vscode-circuitpython"
 
 visual_code_home: "{{ dotfiles_user_home }}/.config/Code/User"

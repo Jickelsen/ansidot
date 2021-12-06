@@ -2,10 +2,10 @@
 ###############################################################################
 # Tmux installation
 
-- name: Tmux | Installs tmux | apt
+- name: Tmux | Installs tmux | package
   become: yes
   become_user: root
-  apt:
+  package:
     name: tmux
     state: present
 

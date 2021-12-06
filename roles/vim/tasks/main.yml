@@ -1,0 +1,16 @@
+---
+###############################################################################
+# Vim installation
+
+- name: Vim | Installs Vim | package
+  become: yes
+  become_user: root
+  package:
+    name: vim
+    state: present
+    update_cache: yes
+
+- name: Vim | SpaceVim | command
+  ansible.builtin.command: curl -sLf https://spacevim.org/install.sh | bash
+  args:
+    creates: "/home/{{dotfiles_user}}/.SpaceVim"

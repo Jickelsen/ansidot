@@ -2,16 +2,13 @@
 ###############################################################################
 # Visual Code
 
-- name: Visual Code | Downloads .deb file | get_url
-  get_url:
-    url: "{{ visual_code_link }}"
-    dest: "{{ dotfiles_home }}/downloads/code.deb"
-
-- name: Visual Code | Install package | apt
+- name: Visual Code | Install package | package 
   become: yes
   become_user: root
-  apt:
-    deb: "{{ dotfiles_home }}/downloads/code.deb"
+  package:
+    name:
+      - "code"
+    update_cache: yes
 
 - name: Visual Code | Install extensions | command
   loop: "{{ visual_code_extensions }}"

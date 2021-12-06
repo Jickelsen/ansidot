@@ -2,11 +2,18 @@
 ###############################################################################
 # Git installation
 
-- name: Git | Installs git | apt
+- name: Git | Installs git | package
   become: yes
   become_user: root
-  apt:
+  package:
     name: git
+    state: present
+
+- name: Tig | Installs Tig | package
+  become: yes
+  become_user: root
+  package:
+    name: tig
     state: present
 
 - name: Git | Links global gitignore file | file

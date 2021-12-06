@@ -5,7 +5,7 @@
 - name: zsh | Installs zsh | apt
   become: yes
   become_user: root
-  apt:
+  package:
     name: zsh
     state: present
 
@@ -31,26 +31,10 @@
   register: oh_my_zsh_stat
 
 - name: zsh | Installs oh-my-zsh | raw
-  raw: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
+  raw: 'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
   when: not oh_my_zsh_stat.stat.exists
 
 - name: zsh | Copies .zshrc | template
   template:
     src: "zshrc.j2"
     dest: "{{ dotfiles_user_home }}/.zshrc"
-
-- name: zsh | Installs hab | git
-  git:
-    repo: "https://github.com/alexdesousa/hab.git"
-    dest: "{{ dotfiles_user_home }}/.oh-my-zsh/custom/plugins/hab"
-    clone: yes
-    update: yes
-    force: yes
-
-- name: zsh | Installs oath | git
-  git:
-    repo: "https://github.com/alexdesousa/oath.git"
-    dest: "{{ dotfiles_user_home }}/.oh-my-zsh/custom/plugins/oath"
-    clone: yes
-    update: yes
-    force: yes

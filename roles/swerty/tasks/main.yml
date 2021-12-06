@@ -1,0 +1,45 @@
+---
+###############################################################################
+# Swerty
+
+ - name: Swerty | Add Swerty to /x11/xkb/symbols/se | blockinfile
+    become: yes
+    blockinfile:
+      block: "{{ lookup('file', '../files/swerty.txt') }}"
+      path: /usr/share/X11/xkb/symbols/se
+
+- name: Swerty | Add variant to evdev.xml | xml
+    become: yes
+    xml:
+      path: /usr/share/X11/xkb/rules/evdev.xml
+      xpath: '/xkbConfigRegistry/layoutList/layout/variantlist[variant/configitem/description = "Swedish (Dvorak)"]'
+      backup: yes
+      input_type: xml
+      add_children:
+        - |
+          <variant>
+            <configItem>
+              <name>swerty</name>
+              <description>Swerty</description>
+            </configItem>
+          </variant>
+
+- name: Swerty | Add variant to evdev.lst | lineinfile
+  become: yes
+  lineinfile:
+    path: /usr/share/X11/xkb/rules/evdev.lst
+    insertafter: "! variant"
+    line: "  swerty          se: Swerty"
+
+- name: Swerty | Set layout | dconf
+      become: yes
+      become_user: frost
+      tags: dconf
+      dconf:
+        key: "/org/gnome/desktop/input-sources/sources"
+        value: "[('xkb', 'frost+dvorak'), ('xkb', 'dvorak')]"
+        state: present
+
+- name: Swerty | Restart Gnome Shell | shell
+  shell: busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
+

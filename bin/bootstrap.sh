@@ -99,16 +99,17 @@ DOTFILES_BOOTSTRAP_USER_HOME=$(
 )
 
 ###########
+# TODO: Distro-agnostic
 # Bootstrap
 
-apt update && apt install -y sudo ansible
-
-apt upgrade
-
-apt autoremove
-
-update-alternatives --install /usr/bin/python python /usr/bin/python2 1
-update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+# apt update && apt install -y sudo ansible
+#
+# apt upgrade
+#
+# apt autoremove
+#
+# update-alternatives --install /usr/bin/python python /usr/bin/python2 1
+# update-alternatives --install /usr/bin/python python /usr/bin/python3 2
 
 export PATH="$PATH:/usr/sbin"
 

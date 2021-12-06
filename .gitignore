@@ -1,3 +1,4 @@
 .envrc
 vars/custom.yml
 downloads/**
+vault_password
