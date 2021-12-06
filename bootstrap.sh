@@ -5,8 +5,7 @@ set -e
 ##################
 # Global variables
 
-ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DOTFILES_VARS="$ROOTDIR/.envrc"
+ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/" && pwd)"
 DOTFILES_HOSTS="$ROOTDIR/hosts"
 DOTFILES_PLAYBOOK="$ROOTDIR/dotfiles.yml"
 DOTFILES_CUSTOM_CONFIG="$ROOTDIR/vars/custom.yml"
@@ -67,7 +66,12 @@ do
   esac
 done
 
-source "$DOTFILES_VARS" 2> /dev/null
+# Hacky way to load vault vars
+ansible-vault view vars/vault > tmp_vars
+set -a
+. ./tmp_vars
+set +a
+rm ./tmp_vars
 
 if [ -z "$TAG" ]
 then
@@ -97,19 +101,18 @@ DOTFILES_BOOTSTRAP_USER_HOME=$(
   getent passwd "$DOTFILES_BOOTSTRAP_USER" |
   cut -d: -f6
 )
+echo "Installing Ansible for $DISTRO"
 
 ###########
-# TODO: Distro-agnostic
 # Bootstrap
+if [ $DISTRO=="ubuntu" ]; then
+  apt update && apt install -y sudo ansible
+  apt upgrade
+  apt autoremove
 
-# apt update && apt install -y sudo ansible
-#
-# apt upgrade
-#
-# apt autoremove
-#
-# update-alternatives --install /usr/bin/python python /usr/bin/python2 1
-# update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+elif [ $DISTRO=="arch" ]; then
+  pacman --noconfirm -Sy ansible
+fi
 
 export PATH="$PATH:/usr/sbin"
 
@@ -127,8 +130,6 @@ sudo -u "$DOTFILES_BOOTSTRAP_USER" \
   DOTFILES_BOOTSTRAP_USER_HOME="$DOTFILES_BOOTSTRAP_USER_HOME" \
   DOTFILES_BOOTSTRAP_GIT_NAME="$DOTFILES_BOOTSTRAP_GIT_NAME" \
   DOTFILES_BOOTSTRAP_GIT_EMAIL="$DOTFILES_BOOTSTRAP_GIT_EMAIL" \
-  DOTFILES_BOOTSTRAP_ZSH_OATH_KEY="$DOTFILES_BOOTSTRAP_ZSH_OATH_KEY" \
-  DOTFILES_BOOTSTRAP_ZSH_OATH_EMAIL="$DOTFILES_BOOTSTRAP_ZSH_OATH_EMAIL" \
   ansible-playbook -i "$DOTFILES_HOSTS" "$DOTFILES_PLAYBOOK" \
   --ask-become-pass \
   --tags "$TAG"

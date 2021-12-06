@@ -1,8 +1,12 @@
+---
 sudo: required
-dist: hirsute
+
+env:
+  - BUILD_CFG=arch
+  - BUILD_CFG=ubuntu
 
 services:
-    - docker
+  - docker
 
 script:
     - |
@@ -11,4 +15,18 @@ script:
           -v $PWD:/usr/src:ro \
           --workdir /usr/src \
           r.j3ss.co/shellcheck ./.test.sh
+    - |
+      if [ "$BUILD_CFG" == "ubuntu" ]; then
+          docker run \
+            --rm \
+            -v $PWD:/tmp/Dotfile-tools \
+            ubuntu:latest \
+            bash -c "apt update && \
+              apt -y install \
+              sudo \
+              make && \
+              cd /tmp/Dotfile-tools && \
+              make ansible && \
+              make test"
+
 
