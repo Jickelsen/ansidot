@@ -52,7 +52,7 @@ function __bootstrap_usage {
 ###########
 # Arguments
 
-while getopts :t:h option
+while getopts :t:T:h option
 do
   case "$option" in
     h)
@@ -60,6 +60,9 @@ do
       ;;
     t)
       TAG="${OPTARG}"
+      ;;
+    T)
+      EXTAG="${OPTARG}"
       ;;
     *)
       ;;
@@ -73,9 +76,23 @@ set -a
 set +a
 rm ./tmp_vars
 
-if [ -z "$TAG" ]
+if [ -z "$TAG"  ] && [ -z "$EXTAG" ]
 then
+  echo "No tags specified"
   TAG="all"
+  EXTAG=""
+elif [ -n "$TAG"  ] &&  [ -z "$EXTAG" ]
+then
+  echo "Using tags $TAG"
+  EXTAG=""
+elif [ -z "$TAG"  ] &&  [ -n "$EXTAG" ]
+then
+  echo "Excluding tags $EXTAG"
+  TAG="all"
+elif [ -n "$TAG"  ] &&  [ -n "$EXTAG" ]
+then
+  echo "We can't both exclude and include tags! Exiting"
+  exit 1
 fi
 
 if [ -z "$DOTFILES_BOOTSTRAP_USER" ]
@@ -132,6 +149,7 @@ sudo -u "$DOTFILES_BOOTSTRAP_USER" \
   DOTFILES_BOOTSTRAP_GIT_EMAIL="$DOTFILES_BOOTSTRAP_GIT_EMAIL" \
   ansible-playbook -i "$DOTFILES_HOSTS" "$DOTFILES_PLAYBOOK" \
   --ask-become-pass \
-  --tags "$TAG"
+  --tags "$TAG" \
+  --skip-tags "$EXTAG"
 
 exit 0

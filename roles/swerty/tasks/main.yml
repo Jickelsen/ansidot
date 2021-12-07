@@ -34,7 +34,7 @@
 - name: Swerty | Set layout | dconf
   become: yes
   become_user: "{{dotfiles_user}}"
-  tags: dconf
+  tags: gnome
   dconf:
     key: "/org/gnome/desktop/input-sources/sources"
     value: "[('xkb', 'Swerty')]"
@@ -42,11 +42,13 @@
 
 - name: Register uid of {{dotfiles_user}}
   command: id -u {{dotfiles_user}}
+  tags: gnome
   register: uid
 
 - name: Swerty | Restart Gnome Shell | shell
   become: yes
   become_user: "{{dotfiles_user}}"
+  tags: gnome
   shell: busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting...")'
   environment:
     XDG_RUNTIME_DIR: /run/user/{{uid.stdout}}
