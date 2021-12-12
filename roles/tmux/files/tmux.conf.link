@@ -9,3 +9,51 @@ set -g mouse on
 set -g base-index 1
 
 set-option -g window-size smallest
+
+# Prompt for name when creating new window
+bind-key c command-prompt -p "window name:" "new-window; rename-window '%%'"
+
+# Drag windows with mouse button
+bind-key -n MouseDrag1Status swap-window -t=
+
+# Longer history
+set -g history-limit 30000
+
+# New split keybinds
+unbind '"'
+unbind %
+bind | split-window -h
+bind - split-window -v
+
+# Replace `xsel` commands with something pbcopy on Mac
+# See https://github.com/tmux/tmux/wiki/Clipboard#available-tools
+bind -T copy-mode    DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"
+bind -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"
+bind -n DoubleClick1Pane select-pane \; copy-mode -M \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"
+bind -T copy-mode    TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "xsel -i"
+bind -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "xsel -i"
+bind -n TripleClick1Pane select-pane \; copy-mode -M \; send -X select-line \; send -X copy-pipe-no-clear "xsel -i"
+bind -n MouseDown2Pane run "tmux set-buffer -b primary_selection \"$(xsel -o)\"; tmux paste-buffer -b primary_selection; tmux delete-buffer -b primary_selection"
+
+# TPM and list of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @yank_action 'copy-pipe-no-clear'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+set -g @plugin 'laktak/extrakto'
+# Enable fzf support
+set -g @extrakto_fzf_tool "/usr/bin/fzf"
+
+
+bind -T copy-mode    C-c send -X copy-pipe-no-clear "xsel -i --clipboard"
+bind -T copy-mode-vi C-c send -X copy-pipe-no-clear "xsel -i --clipboard"
+
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'github_username/plugin_name#branch'
+# set -g @plugin 'git@github.com:user/plugin'
+# set -g @plugin 'git@bitbucket.com:user/plugin'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'

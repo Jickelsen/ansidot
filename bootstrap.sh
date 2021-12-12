@@ -52,11 +52,14 @@ function __bootstrap_usage {
 ###########
 # Arguments
 
-while getopts :t:T:h option
+while getopts :d:t:T:h option
 do
   case "$option" in
     h)
       __bootstrap_usage 0
+      ;;
+    d)
+      DISTRO="${OPTARG}"
       ;;
     t)
       TAG="${OPTARG}"
@@ -68,13 +71,6 @@ do
       ;;
   esac
 done
-
-# Hacky way to load vault vars
-ansible-vault view vars/vault > tmp_vars
-set -a
-. ./tmp_vars
-set +a
-rm ./tmp_vars
 
 if [ -z "$TAG"  ] && [ -z "$EXTAG" ]
 then
@@ -94,6 +90,37 @@ then
   echo "We can't both exclude and include tags! Exiting"
   exit 1
 fi
+
+
+###########
+# Bootstrap
+if [[ $DISTRO == *"ubuntu"* ]]
+then
+  echo "Installing Ansible for Ubuntu"
+  apt update && apt install -y sudo ansible
+  apt upgrade
+  apt autoremove
+elif [[ $DISTRO == *"arch"* ]]
+then
+  echo "Installing Ansible for Arch"
+  apt update && apt install -y sudo ansible
+  pacman --noconfirm --needed -Sy ansible
+fi
+
+# Hacky way to load vault vars
+ansible-vault view vars/vault > tmp_vars
+set -a
+. ./tmp_vars
+set +a
+rm ./tmp_vars
+
+# if [[ $DISTRO == "ubuntu" ]]
+# then
+#   adduser "$DOTFILES_BOOTSTRAP_USER" sudo
+# elif [[ $DISTRO == "arch" ]]
+# then
+#   useradd --create-home "$DOTFILES_BOOTSTRAP_USER"
+# fi
 
 if [ -z "$DOTFILES_BOOTSTRAP_USER" ]
 then
@@ -118,22 +145,9 @@ DOTFILES_BOOTSTRAP_USER_HOME=$(
   getent passwd "$DOTFILES_BOOTSTRAP_USER" |
   cut -d: -f6
 )
-echo "Installing Ansible for $DISTRO"
-
-###########
-# Bootstrap
-if [ $DISTRO=="ubuntu" ]; then
-  apt update && apt install -y sudo ansible
-  apt upgrade
-  apt autoremove
-
-elif [ $DISTRO=="arch" ]; then
-  pacman --noconfirm -Sy ansible
-fi
 
 export PATH="$PATH:/usr/sbin"
 
-adduser "$DOTFILES_BOOTSTRAP_USER" sudo
 
 if [ ! -f "$DOTFILES_CUSTOM_CONFIG" ]
 then

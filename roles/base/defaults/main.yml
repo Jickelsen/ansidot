@@ -2,3 +2,6 @@ base_packages:
   - curl
   - wget
   - ranger
+  - fzf
+  - xsel
+  - xclip

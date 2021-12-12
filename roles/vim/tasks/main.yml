@@ -14,3 +14,12 @@
   ansible.builtin.command: curl -sLf https://spacevim.org/install.sh | bash
   args:
     creates: "/home/{{dotfiles_user}}/.SpaceVim"
+
+- name: Vim | Copy custom SpaceVim config file | file
+  file:
+    src: "{{ dotfiles_home }}/roles/vim/files/init.toml.link"
+    dest: "{{ dotfiles_user_home }}/.SpaceVim.d/init.toml"
+    state: link
+    force: yes
+
+

@@ -2,7 +2,7 @@
 ###############################################################################
 # Base system
 
-- name: Base | Installs packages | apt
+- name: Base | Installs packages | package
   become: yes
   become_user: root
   loop: "{{ base_packages }}"
