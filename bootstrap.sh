@@ -103,7 +103,6 @@ then
 elif [[ $DISTRO == *"arch"* ]]
 then
   echo "Installing Ansible for Arch"
-  apt update && apt install -y sudo ansible
   pacman --noconfirm --needed -Sy ansible
 fi
 
