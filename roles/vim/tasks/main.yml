@@ -11,9 +11,14 @@
     update_cache: yes
 
 - name: Vim | SpaceVim | command
-  ansible.builtin.command: curl -sLf https://spacevim.org/install.sh | bash
+  command: curl -sLf https://spacevim.org/install.sh | bash
   args:
-    creates: "/home/{{dotfiles_user}}/.SpaceVim"
+    creates: "{{ dotfiles_user_home }}/.SpaceVim"
+
+- name: Vim | SpaceVim | command
+  file:
+    path: "{{ dotfiles_user_home }}/.SpaceVim.d"
+    state: directory
 
 - name: Vim | Copy custom SpaceVim config file | file
   file:
