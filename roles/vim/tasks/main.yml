@@ -10,10 +10,27 @@
     state: present
     update_cache: yes
 
-- name: Vim | SpaceVim | command
-  command: curl -sLf https://spacevim.org/install.sh | bash
-  args:
-    creates: "{{ dotfiles_user_home }}/.SpaceVim"
+- name: Vim | Check if installation script already exists | stat
+  stat: path="{{ dotfiles_user_home }}/.SpaceVim"
+  # stat: path="{{ dotfiles_home }}/downloads/spacevim_install.sh"
+  register: spacevim_install_file
+    
+
+- name: Vim | Download SpaceVim installation script | get_url
+  get_url:
+    url: "https://spacevim.org/install.sh"
+    dest: "{{ dotfiles_home }}/downloads/spacevim_install.sh"
+  when: not spacevim_install_file.stat.exists
+
+- name: Vim | Install SpaceVim | command
+  command: bash "{{ dotfiles_home }}/downloads/spacevim_install.sh"
+  register: spacevim_result
+  when: not spacevim_install_file.stat.exists
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: spacevim_result
+    verbosity: 0
 
 - name: Vim | SpaceVim | command
   file:

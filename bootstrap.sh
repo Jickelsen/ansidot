@@ -97,13 +97,13 @@ fi
 if [[ $DISTRO == *"ubuntu"* ]]
 then
   echo "Installing Ansible for Ubuntu"
-  apt update && apt install -y sudo ansible
+  apt update && apt install -y sudo ansible python3-lxml python3-psutil
   apt upgrade
   apt autoremove
 elif [[ $DISTRO == *"arch"* ]]
 then
   echo "Installing Ansible for Arch"
-  pacman --noconfirm --needed -Sy ansible
+  pacman --noconfirm --needed -Sy ansible python-lxml python-psutil interception-dual-function-keys
 fi
 
 # Hacky way to load vault vars
@@ -160,7 +160,7 @@ sudo -u "$DOTFILES_BOOTSTRAP_USER" \
   DOTFILES_BOOTSTRAP_USER_HOME="$DOTFILES_BOOTSTRAP_USER_HOME" \
   DOTFILES_BOOTSTRAP_GIT_NAME="$DOTFILES_BOOTSTRAP_GIT_NAME" \
   DOTFILES_BOOTSTRAP_GIT_EMAIL="$DOTFILES_BOOTSTRAP_GIT_EMAIL" \
-  ansible-playbook -i "$DOTFILES_HOSTS" "$DOTFILES_PLAYBOOK" \
+  ansible-playbook -v -i "$DOTFILES_HOSTS" "$DOTFILES_PLAYBOOK" \
   --ask-become-pass \
   --tags "$TAG" \
   --skip-tags "$EXTAG"

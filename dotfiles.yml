@@ -24,3 +24,6 @@
     - role: swerty
       tags:
         - swerty
+    - role: gnome
+      tags:
+        - gnome

@@ -8,11 +8,25 @@
     block: "{{ lookup('file', '../files/swerty.txt') }}"
     path: /usr/share/X11/xkb/symbols/se
 
-- name: Swerty | Add variant to evdev.xml | xml
+- name: Swerty | Check if variant has already been added to evdev.xml | xml
   become: yes
   xml:
     path: /usr/share/X11/xkb/rules/evdev.xml
-    xpath: '/xkbConfigRegistry/layoutList/layout/variantlist[variant/configitem/description = "Swedish (Dvorak)"]'
+    xpath: '/xkbConfigRegistry/layoutList/layout/variantList/variant/configItem/description[text()="Swerty"]'
+    content: attribute  
+  ignore_errors: yes
+  register: xml_present
+
+- name: Show an attribute value
+  ansible.builtin.debug:
+    var: xml_present.failed
+
+- name: Swerty | Add variant to evdev.xml | xml
+  when: xml_present.failed
+  become: yes
+  xml:
+    path: /usr/share/X11/xkb/rules/evdev.xml
+    xpath: '/xkbConfigRegistry/layoutList/layout/variantList[variant/configItem/description/text()="Swedish (Dvorak)"]'
     backup: yes
     input_type: xml
     add_children:
@@ -25,6 +39,7 @@
         </variant>
 
 - name: Swerty | Add variant to evdev.lst | lineinfile
+  when: xml_present.failed
   become: yes
   lineinfile:
     path: /usr/share/X11/xkb/rules/evdev.lst
@@ -32,24 +47,62 @@
     line: "  swerty          se: Swerty"
 
 - name: Swerty | Set layout | dconf
+  when: xml_present.failed
   become: yes
   become_user: "{{dotfiles_user}}"
-  tags: gnome
+  tags: swerty_gnome
   dconf:
     key: "/org/gnome/desktop/input-sources/sources"
-    value: "[('xkb', 'Swerty')]"
+    value: "[('xkb', 'se+swerty')]"
     state: present
 
 - name: Register uid of {{dotfiles_user}}
+  when: xml_present.failed
   command: id -u {{dotfiles_user}}
-  tags: gnome
+  tags: swerty_gnome
   register: uid
 
 - name: Swerty | Restart Gnome Shell | shell
+  when: xml_present.failed
   become: yes
   become_user: "{{dotfiles_user}}"
-  tags: gnome
+  tags: swerty_gnome
   shell: busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting...")'
   environment:
     XDG_RUNTIME_DIR: /run/user/{{uid.stdout}}
 
+- name: Swerty | Create dual-function-keys directory for Interception | file
+  become: yes
+  file:
+    path: /etc/interception/dual-function-keys
+    state: directory
+    mode: '0755'
+
+- name: Swerty | Create udevmon.d directory for Interception | file
+  become: yes
+  file:
+    path: /etc/interception/udevmon.d
+    state: directory
+    mode: '0755'
+
+- name: Swerty | Links Interception rules with dual-function-keys for turning caps to hyper | file
+  become: yes
+  file:
+    src: "{{ dotfiles_home }}/roles/swerty/files/caps2eschyper.yml.link"
+    dest:  "/etc/interception/dual-function-keys/caps2eschyper.yml"
+    state: link
+    force: yes
+
+- name: Swerty | Links udev Interception rules for turning caps to hyper | file
+  become: yes
+  file:
+    src: "{{ dotfiles_home }}/roles/swerty/files/caps2eschyperudev.yml.link"
+    dest:  "/etc/interception/udevmon.d/caps2eschyperudev.yml"
+    state: link
+    force: yes
+
+- name: Swerty | Reload udevmon service | systemd
+  become: yes
+  systemd:
+    name: udevmon
+    state: reloaded

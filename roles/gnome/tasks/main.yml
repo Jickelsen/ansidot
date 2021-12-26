@@ -1,0 +1,12 @@
+---
+###############################################################################
+# Gnome
+
+- name: Gnome | Set keybinds for Material Shell | dconf
+  become: yes
+  become_user: "{{dotfiles_user}}"
+  loop: "{{ material_shell_binds }}"
+  dconf:
+    key: "/org/gnome/shell/extensions/materialshell/bindings/{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
