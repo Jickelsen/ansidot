@@ -1,11 +1,12 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 set -e
 
 ##################
 # Global variables
 
-ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/" && pwd)"
+ROOTDIR="$(cd "$(dirname "$0")/" && pwd)"
+echo $ROOTDIR
 DOTFILES_HOSTS="$ROOTDIR/hosts"
 DOTFILES_PLAYBOOK="$ROOTDIR/dotfiles.yml"
 DOTFILES_CUSTOM_CONFIG="$ROOTDIR/vars/custom.yml"

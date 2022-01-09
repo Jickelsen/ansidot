@@ -24,6 +24,7 @@
     - role: swerty
       tags:
         - swerty
+        - x11
     - role: gnome
       tags:
         - gnome

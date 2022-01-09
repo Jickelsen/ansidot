@@ -23,7 +23,7 @@
   when: not spacevim_install_file.stat.exists
 
 - name: Vim | Install SpaceVim | command
-  command: bash "{{ dotfiles_home }}/downloads/spacevim_install.sh"
+  command: sh "{{ dotfiles_home }}/downloads/spacevim_install.sh"
   register: spacevim_result
   when: not spacevim_install_file.stat.exists
 
