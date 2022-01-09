@@ -5,3 +5,4 @@ base_packages:
   - fzf
   - xsel
   - xclip
+  - the_silver_searcher

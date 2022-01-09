@@ -12,4 +12,5 @@
 
 - name: Visual Code | Install extensions | command
   loop: "{{ visual_code_extensions }}"
+  tags: code_extensions
   command: code --install-extension "{{ item }}"

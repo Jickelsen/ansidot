@@ -16,3 +16,5 @@ node_modules/
 .env*
 # Elixir Language Server
 .elixir_ls/
+# Lutris, Wine etc
+Games/

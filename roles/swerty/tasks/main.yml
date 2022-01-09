@@ -105,4 +105,4 @@
   become: yes
   systemd:
     name: udevmon
-    state: reloaded
+    state: restarted

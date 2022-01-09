@@ -1,6 +1,6 @@
 unbind C-b
-set-option -g prefix C-a
-bind-key C-a send-prefix
+set-option -g prefix C-M-a
+bind-key C-M-a send-prefix
 
 bind r source-file ~/.tmux.conf
 
@@ -44,6 +44,7 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'laktak/extrakto'
 # Enable fzf support
 set -g @extrakto_fzf_tool "/usr/bin/fzf"
+set -g @extrakto_split_direction "v"
 
 
 bind -T copy-mode    C-c send -X copy-pipe-no-clear "xsel -i --clipboard"
