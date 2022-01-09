@@ -31,11 +31,13 @@ function __bootstrap_usage {
   Installs new system given some environment variables.
 
   Usage:
-    # $0 [-t <TAG> -h]
+    # $0 [-d <DISTRO> -t <TAG> -T <EXTAG> -h]
 
   Arguments:
-    -h       - Shows this help.
-    -t <TAG> - Role tag
+    -h          - Shows this help.
+    -t <TAG>    - Role tag
+    -T <EXTAG>  - Exclude tags
+    -d <DISTRO> - Distro
 
   Environment variables:
     DOTFILES_BOOTSTRAP_USER      - Linux user.
@@ -104,6 +106,11 @@ elif [[ $DISTRO == *"arch"* ]]
 then
   echo "Installing Ansible for Arch"
   pacman --noconfirm --needed -Sy ansible python-lxml python-psutil interception-dual-function-keys
+elif [[ $DISTRO == *"alpine"* ]]
+then
+  echo "Installing Ansible for Alpine, make sure to enable community repo"
+  apk update
+  apk add ansible
 fi
 
 # Hacky way to load vault vars
