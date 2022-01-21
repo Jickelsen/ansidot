@@ -9,15 +9,19 @@
     - role: git
       tags:
         - git
+        - minimum
     - role: zsh
       tags:
         - zsh
+        - minimum
     - role: tmux
       tags:
         - tmux
+        - minimum
     - role: vim
       tags:
         - vim
+        - minimum
     - role: code
       tags:
         - code

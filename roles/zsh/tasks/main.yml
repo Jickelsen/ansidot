@@ -1,32 +1,18 @@
 ---
 ###############################################################################
-# Zsh installation
+# Zsh configuration
 
-- name: zsh | Installs zsh | package
+- name: zsh | Sets zsh as default shell for root | user
   become: yes
-  become_user: root
-  package:
-    name: zsh
-    state: present
+  user:
+    name: "{{ dotfiles_user }}"
+    shell: /bin/zsh
 
-- name: zsh | Sets zsh as default shell for root | command
+- name: zsh | Sets zsh as default shell for {{ dotfiles_user }} | user
   become: yes
-  become_user: root
-  command: chsh -s /bin/zsh
-  register: zsh_for_root
-  failed_when: zsh_for_root.rc >= 1
-  changed_when: "'not changed' not in zsh_for_root.stderr" 
-
-# - debug:
-# msg: :{{zsh_for_root}}
-
-- name: zsh | Sets zsh as default shell for {{ dotfiles_user }} | command
-  become: yes
-  become_user: root
-  command: chsh -s /bin/zsh {{ dotfiles_user }}
-  register: zsh_for_user
-  failed_when: zsh_for_user.rc >= 1
-  changed_when: "'not changed' not in zsh_for_user.stderr"
+  user:
+    name: "{{ dotfiles_user }}"
+    shell: /bin/zsh
 
 - name: zsh | Checks for oh-my-zsh installation | stat
   stat:

@@ -1,13 +1,6 @@
 ---
 ###############################################################################
-# Tmux installation
-
-- name: Tmux | Installs tmux | package
-  become: yes
-  become_user: root
-  package:
-    name: tmux
-    state: present
+# Tmux configuration
 
 - name: Tmux | Links .tmux.conf file | file
   file:

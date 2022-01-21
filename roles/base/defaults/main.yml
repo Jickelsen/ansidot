@@ -1,6 +1,11 @@
 base_packages:
+  - vim
+  - tmux
+  - zsh
   - curl
   - wget
+  - git
+  - tig
   - ranger
   - fzf
   - xsel

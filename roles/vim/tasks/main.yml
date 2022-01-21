@@ -1,14 +1,6 @@
 ---
 ###############################################################################
-# Vim installation
-
-- name: Vim | Installs Vim | package
-  become: yes
-  become_user: root
-  package:
-    name: vim
-    state: present
-    update_cache: yes
+# Vim configuration
 
 - name: Vim | Check if installation script already exists | stat
   stat: path="{{ dotfiles_user_home }}/.SpaceVim"
