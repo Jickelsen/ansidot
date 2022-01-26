@@ -1,3 +1,7 @@
+# Fix WSL bug where characters appear at start of new session
+# https://github.com/microsoft/WSL/issues/5931
+set -g escape-time 50
+
 unbind C-b
 set-option -g prefix C-M-a
 bind-key C-M-a send-prefix
@@ -33,6 +37,11 @@ bind -T copy-mode    TripleClick1Pane select-pane \; send -X select-line \; send
 bind -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "xsel -i"
 bind -n TripleClick1Pane select-pane \; copy-mode -M \; send -X select-line \; send -X copy-pipe-no-clear "xsel -i"
 bind -n MouseDown2Pane run "tmux set-buffer -b primary_selection \"$(xsel -o)\"; tmux paste-buffer -b primary_selection; tmux delete-buffer -b primary_selection"
+
+# Powerline
+source /usr/share/powerline/bindings/tmux/powerline.conf
+# source ~/.powerline.conf
+# run-shell "powerline-daemon -q"
 
 # TPM and list of plugins
 # Don't forget to hit prefix+I to install!
