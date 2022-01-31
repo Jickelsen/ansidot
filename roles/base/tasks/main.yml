@@ -2,11 +2,26 @@
 ###############################################################################
 # Base system
 
+- name: Print package manager 
+  debug:
+    msg: Package manager is {{ ansible_pkg_mgr }}
+  when: ansible_pkg_mgr is defined
+
 - name: Base | Installs packages | package
+  when: ansible_pkg_mgr != 'homebrew'
   become: yes
   become_user: root
   loop: "{{ base_packages }}"
   package:
     name: "{{ item }}"
     state: present
-    update_cache: yes
+    #update_cache: yes
+
+- name: Base | Installs packages for MacOS | package
+  when: ansible_pkg_mgr == 'homebrew'
+  loop: "{{ base_packages }}"
+  become_user: "{{ dotfiles_user }}"
+  package:
+    name: "{{ item }}"
+    state: present
+

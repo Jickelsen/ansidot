@@ -39,7 +39,12 @@ bind -n TripleClick1Pane select-pane \; copy-mode -M \; send -X select-line \; s
 bind -n MouseDown2Pane run "tmux set-buffer -b primary_selection \"$(xsel -o)\"; tmux paste-buffer -b primary_selection; tmux delete-buffer -b primary_selection"
 
 # Powerline
+run-shell "powerline-daemon -q"
+{% if ansible_facts.os_family == "Darwin" %}
+source /usr/local/lib/python3.9/site-packages/powerline/bindings/tmux/powerline.conf
+{% else %}
 source /usr/share/powerline/bindings/tmux/powerline.conf
+{% endif %}
 # source ~/.powerline.conf
 # run-shell "powerline-daemon -q"
 
@@ -52,7 +57,11 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 
 set -g @plugin 'laktak/extrakto'
 # Enable fzf support
+{% if ansible_facts.os_family == "Darwin" %}
+set -g @extrakto_fzf_tool "/usr/local/bin/fzf"
+{% else %}
 set -g @extrakto_fzf_tool "/usr/bin/fzf"
+{% endif %}
 set -g @extrakto_split_direction "v"
 
 

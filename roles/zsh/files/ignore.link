@@ -1,0 +1,16 @@
+# Node
+npm-debug.log
+
+# Mac
+.DS_Store
+.Trash/
+Library/
+
+# Windows
+Thumbs.db
+
+# WebStorm
+.idea/
+
+# vi
+*~

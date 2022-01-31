@@ -27,3 +27,17 @@
   template:
     src: "zshrc.j2"
     dest: "{{ dotfiles_user_home }}/.zshrc"
+
+- name: zsh | Links .rgignore for rg | file
+  file:
+    src: "{{ dotfiles_home }}/roles/zsh/files/ignore.link"
+    dest: "{{ dotfiles_user_home }}/.rgignore"
+    state: link
+    force: yes
+
+- name: zsh | Links .fdignore for fd | file
+  file:
+    src: "{{ dotfiles_home }}/roles/zsh/files/ignore.link"
+    dest: "{{ dotfiles_user_home }}/.fdignore"
+    state: link
+    force: yes

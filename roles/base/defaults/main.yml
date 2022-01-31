@@ -1,4 +1,5 @@
 base_packages:
+  - htop
   - vim
   - tmux
   - zsh
@@ -10,4 +11,6 @@ base_packages:
   - fzf
   - xsel
   - xclip
-  - the_silver_searcher
+  - ripgrep
+  - fd
+  - rga

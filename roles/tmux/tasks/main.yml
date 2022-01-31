@@ -2,12 +2,18 @@
 ###############################################################################
 # Tmux configuration
 
-- name: Tmux | Links .tmux.conf file | file
-  file:
-    src: "{{ dotfiles_home }}/roles/tmux/files/tmux.conf.link"
+- name: Tmux | Install Powerline | pip
+  pip:
+    name: powerline-status
+
+# - name: Print all available facts
+#   ansible.builtin.debug:
+#     var: ansible_facts
+
+- name: Tmux | Copies .tmux.conf | template
+  template:
+    src: "tmux.conf.j2"
     dest: "{{ dotfiles_user_home }}/.tmux.conf"
-    state: link
-    force: yes
 
 - name: zsh | Installs TPM from Github | git
   git:

@@ -2,13 +2,23 @@
 ###############################################################################
 # Visual Code
 
-- name: Visual Code | Install package | package 
+- name: Visual Code | Installs package | package
+  when: ansible_pkg_mgr != 'homebrew'
   become: yes
   become_user: root
   package:
-    name:
-      - "code"
+    name: code
+    state: present
     update_cache: yes
+
+
+- name: Visual Code | Installs package for MacOS | homebrew_cask
+  when: ansible_pkg_mgr == 'homebrew'
+  become_user: "{{ dotfiles_user }}"
+  homebrew_cask:
+    name: visual-studio-code
+    state: present
+
 
 - name: Visual Code | Install extensions | command
   loop: "{{ visual_code_extensions }}"

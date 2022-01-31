@@ -148,10 +148,15 @@ then
 fi
 
 DOTFILES_BOOTSTRAP_ROOT="$ROOTDIR"
-DOTFILES_BOOTSTRAP_USER_HOME=$(
+if [[ $DISTRO != *"macos"* ]]
+then
+  DOTFILES_BOOTSTRAP_USER_HOME=$(
   getent passwd "$DOTFILES_BOOTSTRAP_USER" |
-  cut -d: -f6
-)
+    cut -d: -f6)
+else
+  DOTFILES_BOOTSTRAP_USER_HOME="/Users/"$DOTFILES_BOOTSTRAP_USER
+  echo $DOTFILES_BOOTSTRAP_USER_HOME
+fi
 
 export PATH="$PATH:/usr/sbin"
 
