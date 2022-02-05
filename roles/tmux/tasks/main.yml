@@ -7,8 +7,8 @@
     name: powerline-status
 
 # - name: Print all available facts
-#   ansible.builtin.debug:
-#     var: ansible_facts
+  # ansible.builtin.debug:
+    # var: ansible_facts
 
 - name: Tmux | Copies .tmux.conf | template
   template:

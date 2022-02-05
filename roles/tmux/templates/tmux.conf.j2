@@ -40,7 +40,11 @@ bind -n MouseDown2Pane run "tmux set-buffer -b primary_selection \"$(xsel -o)\";
 
 # Powerline
 run-shell "powerline-daemon -q"
-{% if ansible_facts.os_family == "Darwin" %}
+# Apple Silicon
+{% if ansible_facts.os_family == "Darwin" and ansible_facts.architecture == "arm64" %}
+source /opt/homebrew/lib/python3.9/site-packages/powerline/bindings/tmux/powerline.conf
+# Intel
+{% elif ansible_facts.os_family == "Darwin" and ansible_facts.architecture != "arm64" %}
 source /usr/local/lib/python3.9/site-packages/powerline/bindings/tmux/powerline.conf
 {% else %}
 source /usr/share/powerline/bindings/tmux/powerline.conf
@@ -57,7 +61,11 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 
 set -g @plugin 'laktak/extrakto'
 # Enable fzf support
-{% if ansible_facts.os_family == "Darwin" %}
+# Apple Silicon
+{% if ansible_facts.os_family == "Darwin" and ansible_facts.architecture == "arm64" %}
+set -g @extrakto_fzf_tool "/opt/homebrew/opt/fzf/bin/fzf"
+# Intel
+{% elif ansible_facts.os_family == "Darwin" and ansible_facts.architecture != "arm64" %}
 set -g @extrakto_fzf_tool "/usr/local/bin/fzf"
 {% else %}
 set -g @extrakto_fzf_tool "/usr/bin/fzf"
