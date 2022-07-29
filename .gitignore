@@ -2,3 +2,4 @@
 vars/custom.yml
 downloads/**
 vault_password
+.DS_Store

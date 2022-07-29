@@ -43,6 +43,44 @@
     src: "zshrc.j2"
     dest: "{{ dotfiles_user_home }}/.zshrc"
 
+- name: zsh | Copies rc.conf for Ranger | template
+  template:
+    src: "rc.conf.j2"
+    dest: "{{ dotfiles_user_home }}/.config/ranger/rc.conf"
+
+- name: zsh | Copies quicklook helper script for Ranger | template
+  when: ansible_distribution == 'MacOSX'
+  template:
+    src: "ql.j2"
+    dest: "{{ dotfiles_user_home }}/.bin/ql"
+
+- name: zsh | Sets user bin directory path variable | set_fact
+  set_fact:
+    user_bin_path: '{{ dotfiles_user_home }}/.bin/'
+
+# - name: "zsh | Add {{ user_bin_path }} if PATH does not exist | lineinfile"
+  # lineinfile:
+    # path: '{{ dotfiles_user_home }}/.zshenv'
+    # line: 'export PATH=$PATH:"{{ user_bin_path }}"'
+    # insertafter: EOF
+  # when: lookup('file', '/Users/jickel/.zshenv') is not search('^\s*PATH\s*=')
+#
+# - name: zsh | Add {{ user_bin_path }} to PATH | lineinfile
+  # lineinfile:
+    # path:  '{{ dotfiles_user_home }}/.zshenv'
+    # regexp: 'PATH=(["])((?!.*?{{ user_bin_path }}).*?)(["])$'
+    # line: 'PATH=\1\2:{{ user_bin_path }}\3'
+    # backrefs: yes
+  # when: lookup('file', '/Users/jickel/.zshenv') is search('^\s*PATH\s*=')
+
+- name: zsh | Add {{ user_bin_path }} to PATH | lineinfile
+  lineinfile: >
+    dest='{{ dotfiles_user_home }}/.zshenv'
+    state=present
+    backrefs=yes
+    regexp='PATH=(["]*)((?!.*?{{user_bin_path}}).*?)(["]*)$'
+    line="PATH=\1\2:{{user_bin_path}}\3"
+
 - name: zsh | Links .rgignore for rg | file
   file:
     src: "{{ dotfiles_home }}/roles/zsh/files/ignore.link"

@@ -7,5 +7,6 @@ visual_code_extensions:
   - "octref.vetur"
   - "vspacecode.vspacecode"
   - "joedevivo.vscode-circuitpython"
+  - "waderyan.gitblame"
 
 visual_code_home: "{{ dotfiles_user_home }}/.config/Code/User"
