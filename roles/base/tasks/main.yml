@@ -15,7 +15,6 @@
   package:
     name: "{{ item }}"
     state: present
-    #update_cache: yes
 
 - name: Base | Installs packages for MacOS | package
   when: ansible_pkg_mgr == 'homebrew'
@@ -24,4 +23,70 @@
   package:
     name: "{{ item }}"
     state: present
+
+- name: Base | Installs MacOS specific packages | package
+  when: ansible_pkg_mgr == 'homebrew'
+  loop: "{{ macos_packages }}"
+  become_user: "{{ dotfiles_user }}"
+  package:
+    name: "{{ item }}"
+    state: present
+
+- name: Base | Installs Debian specific packages | package
+  when: ansible_pkg_mgr == 'apt'
+  become: yes
+  become_user: root
+  loop: "{{ deb_packages }}"
+  package:
+    name: "{{ item }}"
+    state: present
+
+- name: Base | Copy and rename fd binary | raw
+  when: ansible_pkg_mgr == 'apt'
+  become: yes
+  raw: 'ln -snf $(which fdfind) /usr/local/bin/fd'
+
+- name: Base | Check if rga installation file already exists | stat
+  stat: path="{{ dotfiles_home }}/downloads/rga_release.tar.gz"
+  register: rga_release_file
+
+- name: Base | Download rga release for ARM64 | get_url
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['architecture'] == 'arm64'
+    - not rga_release_file.stat.exists
+  get_url:
+    url: "https://github.com/phiresky/ripgrep-all/releases/download/v0.9.6/ripgrep_all-v0.9.6-arm-unknown-linux-gnueabihf.tar.gz"
+    dest: "{{ dotfiles_home }}/downloads/rga_release.tar.gz"
+
+- name: Base | Download rga release for AMD64 | get_url
+  when: 
+    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['architecture'] != 'arm64'
+    - not rga_release_file.stat.exists
+  get_url:
+    url: "https://github.com/phiresky/ripgrep-all/releases/download/v0.9.6/ripgrep_all-v0.9.6-x86_64-unknown-linux-musl.tar.gz"
+    dest: "{{ dotfiles_home }}/downloads/rga_release.tar.gz"
+
+- name: Base | Ensure rga directory exists | file
+  file:
+    path: "{{ dotfiles_home }}/downloads/rga"
+    state: directory
+
+- name: Base | Extract rga release file | unarchive
+  when: ansible_pkg_mgr == 'apt'
+  unarchive:
+    src: "{{ dotfiles_home }}/downloads/rga_release.tar.gz"
+    dest: "{{ dotfiles_home }}/downloads/rga"
+    extra_opts: [--strip-components=1]
+    remote_src: yes
+
+- name: Base | Copy rga binary | copy
+  when: ansible_pkg_mgr == 'apt'
+  become: yes
+  copy:
+    src: "{{ dotfiles_home }}/downloads/rga/rga"
+    dest: "/usr/local/bin/"
+    remote_src: yes
+    force: yes
 

@@ -97,7 +97,7 @@ fi
 
 ###########
 # Bootstrap
-if [[ $DISTRO == *"ubuntu"* ]]
+if [[ $DISTRO == *"debian"* ]]
 then
   echo "Installing Ansible for Ubuntu"
   apt update && apt install -y sudo ansible python3-lxml python3-psutil
@@ -120,14 +120,6 @@ set -a
 . ./tmp_vars
 set +a
 rm ./tmp_vars
-
-# if [[ $DISTRO == "ubuntu" ]]
-# then
-#   adduser "$DOTFILES_BOOTSTRAP_USER" sudo
-# elif [[ $DISTRO == "arch" ]]
-# then
-#   useradd --create-home "$DOTFILES_BOOTSTRAP_USER"
-# fi
 
 if [ -z "$DOTFILES_BOOTSTRAP_USER" ]
 then

@@ -23,6 +23,21 @@
   raw: 'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
   when: not oh_my_zsh_stat.stat.exists
 
+- name: zsh | Checks for Starship installation | stat
+  stat:
+    path: "{{ dotfiles_user_home }}/.config/starship.toml"
+  register: starship_stat
+
+- name: zsh | Installs Starship | raw
+  become: yes
+  raw: 'sh -c "$(curl -fsSL https://starship.rs/install.sh)" -f -y'
+  when: not starship_stat.stat.exists
+
+- name: zsh | Copies starship.toml | template
+  template:
+    src: "starship.toml.j2"
+    dest: "{{ dotfiles_user_home }}/.config/starship.toml"
+
 - name: zsh | Copies .zshrc | template
   template:
     src: "zshrc.j2"

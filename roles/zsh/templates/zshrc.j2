@@ -80,8 +80,13 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "opening $file" &&
     xdg-open "$file"
   }
-  source /usr/share/fzf/completion.zsh
-  source /usr/share/fzf/key-bindings.zsh
+  if [[ "$CPUTYPE" == "aarch64" ]]; then # e.g Raspberry PI
+    source /usr/share/doc/fzf/examples/completion.zsh
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+  else
+    source /usr/share/fzf/completion.zsh
+    source /usr/share/fzf/key-bindings.zsh
+  fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   # alternative using ripgrep-all (rga) combined with fzf-tmux preview
   # # This requires ripgrep-all (rga) installed: https://github.com/phiresky/ripgrep-all
@@ -93,14 +98,15 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     local file
     file="$(rga --max-count=1 --ignore-case --files-with-matches --no-messages "$*" | fzf-tmux +m --preview="rga --ignore-case --pretty --context 10 '"$*"' {}")" && echo "opening $file" && open "$file" || return 1;
   }
-  if [[ "$CPUTYPE" == "arm64" ]]; then
+  if [[ "$CPUTYPE" == "arm64" ]]; then # Apple Silicon
     source /opt/homebrew/opt/fzf/shell/completion.zsh
     source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
   else 
-    source /usr/local/opt/fzf/shell/completion.zsh
+    source /opt/homebrew/opt/fzf/shell/completion.zsh
     source /usr/local/opt/fzf/shell/key-bindings.zsh
   fi
 fi
   
+eval "$(starship init zsh)"
 
 ###############################################################################

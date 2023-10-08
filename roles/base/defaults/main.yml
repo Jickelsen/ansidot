@@ -3,6 +3,7 @@ base_packages:
   - vim
   - tmux
   - zsh
+  - mosh
   - curl
   - wget
   - git
@@ -11,6 +12,13 @@ base_packages:
   - fzf
   - xsel
   - xclip
-  - ripgrep
+
+macos_packages:
   - fd
   - rga
+
+deb_packages:
+  - python3-venv
+  - python3-pip
+  - fd-find
+  - ripgrep

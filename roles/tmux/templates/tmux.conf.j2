@@ -38,26 +38,18 @@ bind -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send
 bind -n TripleClick1Pane select-pane \; copy-mode -M \; send -X select-line \; send -X copy-pipe-no-clear "xsel -i"
 bind -n MouseDown2Pane run "tmux set-buffer -b primary_selection \"$(xsel -o)\"; tmux paste-buffer -b primary_selection; tmux delete-buffer -b primary_selection"
 
-# Powerline
-run-shell "powerline-daemon -q"
-# Apple Silicon
-{% if ansible_facts.os_family == "Darwin" and ansible_facts.architecture == "arm64" %}
-source /opt/homebrew/lib/python3.9/site-packages/powerline/bindings/tmux/powerline.conf
-# Intel
-{% elif ansible_facts.os_family == "Darwin" and ansible_facts.architecture != "arm64" %}
-source /usr/local/lib/python3.9/site-packages/powerline/bindings/tmux/powerline.conf
-{% else %}
-source /usr/share/powerline/bindings/tmux/powerline.conf
-{% endif %}
-# source ~/.powerline.conf
-# run-shell "powerline-daemon -q"
-
 # TPM and list of plugins
 # Don't forget to hit prefix+I to install!
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @yank_action 'copy-pipe-no-clear'
 set -g @plugin 'tmux-plugins/tmux-sensible'
+
+#Dracula config
+set -g @plugin 'dracula/tmux'
+set -g @dracula-show-powerline true
+set -g @dracula-show-left-icon session
+set -g @dracula-plugins 'cpu-usage ram-usage'
 
 set -g @plugin 'laktak/extrakto'
 # Enable fzf support

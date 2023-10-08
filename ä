@@ -1,3 +1,0 @@
-material_shell_binds:
-- { key: "app-launcher", value: "['<L_Control><L_Alt><L_Super>x']"}
-- { key: "kill-focused-window", value: "['<Control><Alt><Super>q']"}

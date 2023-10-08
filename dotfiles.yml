@@ -6,6 +6,7 @@
     - role: base
       tags:
         - base
+        - minimum
     - role: git
       tags:
         - git
