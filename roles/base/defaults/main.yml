@@ -16,6 +16,7 @@ base_packages:
 macos_packages:
   - fd
   - rga
+  - coreutils
 
 deb_packages:
   - python3-venv

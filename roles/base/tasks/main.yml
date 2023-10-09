@@ -69,6 +69,7 @@
     dest: "{{ dotfiles_home }}/downloads/rga_release.tar.gz"
 
 - name: Base | Ensure rga directory exists | file
+  when: ansible_pkg_mgr == 'apt'
   file:
     path: "{{ dotfiles_home }}/downloads/rga"
     state: directory
