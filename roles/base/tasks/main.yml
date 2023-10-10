@@ -2,7 +2,13 @@
 ###############################################################################
 # Base system
 
-- name: Print package manager 
+
+- name: Base | Make sure user .config dir exists | file
+  file:
+    path: "{{ dotfiles_user_home }}/.config/"
+    state: directory
+
+- name: Base | Print package manager | debug
   debug:
     msg: Package manager is {{ ansible_pkg_mgr }}
   when: ansible_pkg_mgr is defined

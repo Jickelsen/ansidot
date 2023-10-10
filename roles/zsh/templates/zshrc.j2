@@ -80,13 +80,8 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "opening $file" &&
     xdg-open "$file"
   }
-  if [[ "$CPUTYPE" == "aarch64" ]]; then # e.g Raspberry PI
-    source /usr/share/doc/fzf/examples/completion.zsh
-    source /usr/share/doc/fzf/examples/key-bindings.zsh
-  else
-    source /usr/share/fzf/completion.zsh
-    source /usr/share/fzf/key-bindings.zsh
-  fi
+  source /usr/share/doc/fzf/examples/completion.zsh
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   # alternative using ripgrep-all (rga) combined with fzf-tmux preview
   # # This requires ripgrep-all (rga) installed: https://github.com/phiresky/ripgrep-all

@@ -43,6 +43,11 @@
     src: "zshrc.j2"
     dest: "{{ dotfiles_user_home }}/.zshrc"
 
+- name: zsh | Make sure Ranger config dir exists | file
+  file:
+    path: "{{ dotfiles_user_home }}/.config/ranger/"
+    state: directory
+
 - name: zsh | Copies rc.conf for Ranger | template
   template:
     src: "rc.conf.j2"
@@ -57,6 +62,12 @@
 - name: zsh | Sets user bin directory path variable | set_fact
   set_fact:
     user_bin_path: '{{ dotfiles_user_home }}/.bin/'
+
+- name: zsh | Make sure .zshenv config dir exists | file
+  file:
+    path: "{{ dotfiles_user_home }}/.zshenv"
+    state: touch
+
 
 # - name: "zsh | Add {{ user_bin_path }} if PATH does not exist | lineinfile"
   # lineinfile:

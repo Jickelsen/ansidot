@@ -2,27 +2,14 @@
 ###############################################################################
 # Vim configuration
 
-- name: Vim | Check if installation script already exists | stat
-  stat: path="{{ dotfiles_user_home }}/.SpaceVim"
-  # stat: path="{{ dotfiles_home }}/downloads/spacevim_install.sh"
-  register: spacevim_install_file
-    
+- name: Vim | Checks for SpaceVim installation | stat
+  stat:
+    path: "{{ dotfiles_user_home }}/.SpaceVim/"
+  register: spacevim_stat
 
-- name: Vim | Download SpaceVim installation script | get_url
-  get_url:
-    url: "https://spacevim.org/install.sh"
-    dest: "{{ dotfiles_home }}/downloads/spacevim_install.sh"
-  when: not spacevim_install_file.stat.exists
-
-- name: Vim | Install SpaceVim | command
-  command: sh "{{ dotfiles_home }}/downloads/spacevim_install.sh"
-  register: spacevim_result
-  when: not spacevim_install_file.stat.exists
-
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: spacevim_result
-    verbosity: 0
+- name: Vim | Installs SpaceVim | raw
+  raw: 'sh -c "$(curl -fsSL https://spacevim.org/install.sh)" -f -y'
+  when: not spacevim_stat.stat.exists
 
 - name: Vim | SpaceVim | command
   file:
